@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample-helm-chart
+  namespace: argo
+  labels:
+    project: slabs
+spec:
+  destination:
+    namespace: slabs
+    server: https://kubernetes.default.svc
+  project: slabs
+  source:
+    helm:
+      valueFiles:
+        - values.yaml
+    path: "."
+    repoURL: https://github.com/cnalabs/sample-helm-chart.git
+    targetRevision: main
+  syncPolicy:
+    automated: {}
+  ignoreDifferences:
+  - group: "*"
+    kind: Rollout
+    jsonPointers:
+    - /spec/replicas
